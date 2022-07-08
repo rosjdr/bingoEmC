@@ -66,7 +66,11 @@ int main(){
 }
 
 void limpa_tela(){
-    system("cls");
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
 }
 
 void espera(){
