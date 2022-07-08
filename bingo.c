@@ -17,6 +17,7 @@ void gera_cartela(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde);
 int confere_bola(int numero, int bola);
 int verifica_vencedores(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde, int bolas[QTDE_BOLAS], int qtde_sorteados);
 void imprime_sorteados(int bolas[QTDE_BOLAS], int qtde_sorteados);
+void espera();
 
 /*
 Implementação de um jogo de bingo em C
@@ -53,11 +54,8 @@ int main(){
         if (repetido) continue;
         bolas[cont_sorteados++] = bola;
 
-        #ifdef _WIN32
-            Sleep(TEMPO_ESPERA);
-        #else
-            sleep(TEMPO_ESPERA);
-        #endif
+        espera();
+
         system("cls");
         printf("\n---- RODADA %d ---- SORTEADO: %d ----\n", cont_sorteados, bola);
         imprime_sorteados(bolas,cont_sorteados);
@@ -65,6 +63,14 @@ int main(){
         qtde_vencedores = verifica_vencedores(cartelas,qtde_cartelas,bolas,cont_sorteados);
     }
     
+}
+
+void espera(){
+    #ifdef _WIN32
+        Sleep(TEMPO_ESPERA);
+    #else
+        sleep(TEMPO_ESPERA);
+    #endif
 }
 
 void imprime_sorteados(int bolas[QTDE_BOLAS], int qtde_sorteados){
