@@ -8,9 +8,9 @@
 #endif
 
 #define MAXIMO_CARTELAS 10
-#define TAMANHO_CARTELA 10
+#define TAMANHO_CARTELA 3
 #define QTDE_BOLAS 90
-#define TEMPO_ESPERA 250
+#define TEMPO_ESPERA 2000
 
 void imprime_cartelas(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde, int bolas[QTDE_BOLAS], int qtde_sorteados);
 void gera_cartela(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde);
@@ -19,6 +19,7 @@ int verifica_vencedores(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde, int b
 void imprime_sorteados(int bolas[QTDE_BOLAS], int qtde_sorteados);
 void espera();
 void limpa_tela();
+int sortear_bola(int bolas[QTDE_BOLAS], int qtde_sorteados);
 
 /*
 Implementação de um jogo de bingo em C
@@ -42,27 +43,37 @@ int main(){
     //imprime a cartela de bingo
     imprime_cartelas(cartelas, qtde_cartelas, bolas, cont_sorteados);
 
-    //começar sorteio
-    while(!qtde_vencedores){        
-        int bola = rand()%QTDE_BOLAS+1;
-        int repetido = 0;
-        for(int i=0;i<cont_sorteados;i++){
-            if(bola == bolas[i]){
-                repetido = 1;
-                break;
-            }
-        }
-        if (repetido) continue;
-        bolas[cont_sorteados++] = bola;
+    //começar jogo
+    while(!qtde_vencedores){                
+        bolas[cont_sorteados] = sortear_bola(bolas, cont_sorteados);
+        cont_sorteados++;
 
         espera();
         limpa_tela();
-        printf("\n---- RODADA %d ---- SORTEADO: %d ----\n", cont_sorteados, bola);
+
+        printf("\n---- RODADA %d ---- SORTEADO: %d ----\n", cont_sorteados, bolas[cont_sorteados-1]);
         imprime_sorteados(bolas,cont_sorteados);
         imprime_cartelas(cartelas,qtde_cartelas, bolas, cont_sorteados);
         qtde_vencedores = verifica_vencedores(cartelas,qtde_cartelas,bolas,cont_sorteados);
     }
     
+}
+
+int sortear_bola(int bolas[QTDE_BOLAS], int qtde_sorteados){
+    int repetido = 0;
+    int bola = 0;
+    do {
+        bola = rand()%QTDE_BOLAS+1;
+        for(int i=0;i<qtde_sorteados;i++){
+            if(bola == bolas[i]){
+                repetido = 1;
+                break;
+            } else {
+                repetido = 0;
+            }
+        }
+    } while(repetido);
+    return bola;
 }
 
 void limpa_tela(){
