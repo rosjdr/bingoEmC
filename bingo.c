@@ -8,9 +8,9 @@
 #endif
 
 #define MAXIMO_CARTELAS 10
-#define TAMANHO_CARTELA 3
-#define QTDE_BOLAS 90
-#define TEMPO_ESPERA 2000
+#define TAMANHO_CARTELA 5
+#define QTDE_BOLAS 25
+#define TEMPO_ESPERA 1000
 
 void imprime_cartelas(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde, int bolas[QTDE_BOLAS], int qtde_sorteados);
 void gera_cartela(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde);
@@ -38,7 +38,7 @@ int main(){
         bolas[i] = i+1;
     }
 
-    //gera uma cartela de bingo
+    //gera cartelas de bingo
     gera_cartela(cartelas,qtde_cartelas);
     //imprime a cartela de bingo
     imprime_cartelas(cartelas, qtde_cartelas, bolas, cont_sorteados);
@@ -144,20 +144,36 @@ void imprime_cartelas(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde, int bol
 
 void gera_cartela(int c[MAXIMO_CARTELAS][TAMANHO_CARTELA], int qtde){
     for(int cont=0;cont<qtde;cont++){
-        int cont_sorteados = 0;
-        while (cont_sorteados < TAMANHO_CARTELA){
-            int bolinha = rand()%QTDE_BOLAS+1;
-            int repetido = 0;
-            //verificar se repetiu
-            for(int i=0;i<cont_sorteados;i++){
-                if(c[cont][i] == bolinha) {
-                    repetido = 1;
-                    break;
+        int cartela_aceita = 0;
+        while(!cartela_aceita){
+            int cont_sorteados = 0;
+            while (cont_sorteados < TAMANHO_CARTELA){
+                int bolinha = rand()%QTDE_BOLAS+1;
+                int repetido = 0;
+                //verificar se repetiu
+                for(int i=0;i<cont_sorteados;i++){
+                    if(c[cont][i] == bolinha) {
+                        repetido = 1;
+                        break;
+                    }
                 }
+                if(repetido) continue;
+                c[cont][cont_sorteados] = bolinha;
+                cont_sorteados++;
             }
-            if(repetido) continue;
-            c[cont][cont_sorteados] = bolinha;
-            cont_sorteados++;
+            cartela_aceita = 1;
+            
+            for(int i=0;i<cont;i++){
+                int qtde_iguais = 0;
+                for(int j=0;j<TAMANHO_CARTELA;j++){
+                    if(c[cont][j] == c[i][j]) qtde_iguais++;
+                }
+                if(qtde_iguais == TAMANHO_CARTELA) {
+                    cartela_aceita = 0;
+                    break;
+                } 
+            }
+            
         }
     }
 }
